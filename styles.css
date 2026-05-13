@@ -324,6 +324,17 @@ body.auth-locked {
   font-weight: 900;
 }
 
+.icon svg,
+.topbar-logout svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .advisor-panel {
   margin-top: auto;
   padding: 16px;
