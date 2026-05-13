@@ -566,6 +566,10 @@ body.auth-locked {
   backdrop-filter: blur(10px);
 }
 
+.filters.hidden {
+  display: none;
+}
+
 .filters label,
 .lead-form label {
   display: grid;

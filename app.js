@@ -310,6 +310,16 @@ function currentUser() {
   return users.find((user) => user.id === currentUserId && user.status === "Activo");
 }
 
+function setActiveView(viewName) {
+  qsa(".nav-item").forEach((item) => item.classList.toggle("active", item.dataset.view === viewName));
+  qsa(".view").forEach((view) => view.classList.remove("active"));
+  qs(`#${viewName}View`).classList.add("active");
+  const activeNav = qs(`[data-view="${viewName}"]`);
+  qs("#viewTitle").textContent = activeNav?.dataset.title || activeNav?.textContent.trim() || "CRM";
+  qs(".filters").classList.toggle("hidden", ["users", "manual"].includes(viewName));
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
 function getFilters() {
   return {
     search: qs("#searchInput").value.trim().toLowerCase(),
@@ -1209,12 +1219,7 @@ function bindEvents() {
 
   qsa(".nav-item").forEach((button) => {
     button.addEventListener("click", () => {
-      qsa(".nav-item").forEach((item) => item.classList.remove("active"));
-      button.classList.add("active");
-      qsa(".view").forEach((view) => view.classList.remove("active"));
-      qs(`#${button.dataset.view}View`).classList.add("active");
-      qs("#viewTitle").textContent = button.dataset.title || button.textContent.trim();
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      setActiveView(button.dataset.view);
     });
   });
 
@@ -1242,12 +1247,7 @@ function bindEvents() {
     const projectFilter = event.target.closest("[data-project-filter]");
     if (projectFilter) {
       qs("#searchInput").value = projectFilter.dataset.projectFilter;
-      qsa(".nav-item").forEach((item) => item.classList.remove("active"));
-      const leadsNav = qs('[data-view="leads"]');
-      leadsNav.classList.add("active");
-      qsa(".view").forEach((view) => view.classList.remove("active"));
-      qs("#leadsView").classList.add("active");
-      qs("#viewTitle").textContent = "Leads";
+      setActiveView("leads");
       render();
       return;
     }
