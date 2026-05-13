@@ -420,6 +420,9 @@ body.auth-locked {
   font-size: 12px;
   font-weight: 850;
   line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .topbar-actions .primary-button,
@@ -1501,6 +1504,15 @@ button.project-card:hover {
   font-size: 13px;
 }
 
+.protected-note {
+  padding: 8px 10px;
+  border: 1px solid rgba(63, 122, 99, 0.16);
+  border-radius: var(--radius);
+  background: #e9f3ee;
+  color: var(--green) !important;
+  font-weight: 850;
+}
+
 .user-card-actions {
   display: flex;
   gap: 8px;
@@ -1517,6 +1529,11 @@ button.project-card:hover {
 }
 
 .danger-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+
+.user-card-actions .small-button:disabled {
   cursor: not-allowed;
   opacity: 0.42;
 }
@@ -1679,8 +1696,28 @@ dialog::backdrop {
     flex-direction: column;
   }
 
+  .topbar-actions {
+    display: grid;
+    grid-template-columns: 1fr auto;
+  }
+
   .search {
+    grid-column: 1 / -1;
     min-width: 0;
+  }
+
+  .topbar-actions > .ghost-button,
+  .topbar-actions > .primary-button {
+    grid-column: 1 / -1;
+  }
+
+  .user-chip {
+    max-width: none;
+    min-height: 46px;
+  }
+
+  .topbar-logout {
+    width: 46px;
   }
 
   .hero-band {

@@ -1,0 +1,13 @@
+{
+  "name": "remax-crm",
+  "version": "1.0.0",
+  "private": true,
+  "description": "RE/MAX Paraguay development CRM frontend",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check app.js && node --check server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -179,6 +179,8 @@ const seedUsers = [
   { id: 3, name: "Asistente CRM", email: "asistente@remax.py", password: "asistente123", role: "Asistente", status: "Activo" },
 ];
 
+const protectedAdminEmail = "admin@remax.py";
+
 let leads = loadLeads();
 let projects = loadProjects();
 let users = loadUsers();
@@ -269,11 +271,39 @@ function saveProjects() {
 
 function loadUsers() {
   const stored = localStorage.getItem("remaxCrmUsers");
-  return stored ? JSON.parse(stored) : seedUsers;
+  const rawUsers = stored ? JSON.parse(stored) : seedUsers;
+  return normalizeUsers(rawUsers);
 }
 
 function saveUsers() {
   localStorage.setItem("remaxCrmUsers", JSON.stringify(users));
+}
+
+function normalizeUsers(rawUsers) {
+  const adminSeed = seedUsers.find((user) => user.email === protectedAdminEmail);
+  const merged = [...rawUsers];
+  const adminIndex = merged.findIndex((user) => String(user.email).toLowerCase() === protectedAdminEmail);
+
+  if (adminIndex === -1) {
+    merged.unshift({ ...adminSeed, protected: true });
+  } else {
+    merged[adminIndex] = {
+      ...adminSeed,
+      ...merged[adminIndex],
+      email: protectedAdminEmail,
+      role: "Admin",
+      status: "Activo",
+      protected: true,
+      password: merged[adminIndex].password || adminSeed.password,
+    };
+  }
+
+  return merged.map((user) => ({
+    ...user,
+    email: String(user.email || "").trim().toLowerCase(),
+    status: user.protected || String(user.email).toLowerCase() === protectedAdminEmail ? "Activo" : user.status || "Activo",
+    protected: user.protected || String(user.email).toLowerCase() === protectedAdminEmail,
+  }));
 }
 
 function currentUser() {
@@ -565,9 +595,13 @@ function renderFollowups(data) {
 
 function renderUsers() {
   const activeUser = currentUser();
+  const activeAdmins = users.filter((user) => user.role === "Admin" && user.status === "Activo").length;
   qs("#userGrid").innerHTML = users
     .map(
-      (user) => `
+      (user) => {
+        const isProtected = user.protected || user.email === protectedAdminEmail;
+        const isLastActiveAdmin = user.role === "Admin" && user.status === "Activo" && activeAdmins <= 1;
+        return `
         <article class="user-card">
           <header>
             <div>
@@ -577,12 +611,14 @@ function renderUsers() {
             </div>
             <span class="pill ${user.status === "Activo" ? "green" : "gold"}">${user.status}</span>
           </header>
+          ${isProtected ? '<span class="protected-note">Admin principal protegido</span>' : ""}
           <div class="user-card-actions">
-            <button class="small-button" type="button" data-user-id="${user.id}" data-user-action="toggle">${user.status === "Activo" ? "Pausar" : "Activar"}</button>
-            <button class="danger-button" type="button" data-user-id="${user.id}" data-user-action="delete" ${activeUser?.id === user.id ? "disabled" : ""}>Eliminar</button>
+            <button class="small-button" type="button" data-user-id="${user.id}" data-user-action="toggle" ${isProtected || isLastActiveAdmin ? "disabled" : ""}>${user.status === "Activo" ? "Pausar" : "Activar"}</button>
+            <button class="danger-button" type="button" data-user-id="${user.id}" data-user-action="delete" ${isProtected || activeUser?.id === user.id || isLastActiveAdmin ? "disabled" : ""}>Eliminar</button>
           </div>
         </article>
-      `,
+      `;
+      },
     )
     .join("");
 }
@@ -802,6 +838,15 @@ function addUser(form) {
 function toggleUser(id) {
   const user = users.find((item) => item.id === Number(id));
   if (!user) return;
+  if (user.protected || user.email === protectedAdminEmail) {
+    showToast("El admin principal queda siempre activo");
+    return;
+  }
+  const activeAdmins = users.filter((item) => item.role === "Admin" && item.status === "Activo").length;
+  if (user.role === "Admin" && user.status === "Activo" && activeAdmins <= 1) {
+    showToast("Debe quedar al menos un admin activo");
+    return;
+  }
   user.status = user.status === "Activo" ? "Pausado" : "Activo";
   saveUsers();
   renderUsers();
@@ -810,8 +855,19 @@ function toggleUser(id) {
 }
 
 function deleteUser(id) {
+  const user = users.find((item) => item.id === Number(id));
+  if (!user) return;
+  if (user.protected || user.email === protectedAdminEmail) {
+    showToast("El admin principal no se puede eliminar");
+    return;
+  }
   if (Number(id) === currentUserId) {
     showToast("No podes eliminar tu usuario activo");
+    return;
+  }
+  const activeAdmins = users.filter((item) => item.role === "Admin" && item.status === "Activo").length;
+  if (user.role === "Admin" && user.status === "Activo" && activeAdmins <= 1) {
+    showToast("Debe quedar al menos un admin activo");
     return;
   }
   users = users.filter((user) => user.id !== Number(id));
@@ -833,7 +889,7 @@ function renderAuth() {
   if (user) {
     document.body.classList.remove("auth-locked");
     loginScreen.classList.add("hidden");
-    qs("#currentUserBtn").textContent = `${user.name} · ${user.role}`;
+    qs("#currentUserBtn").textContent = `${user.name.split(" ")[0]} · ${user.role}`;
   } else {
     document.body.classList.add("auth-locked");
     loginScreen.classList.remove("hidden");
