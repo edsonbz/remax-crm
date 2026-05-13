@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RE/MAX Desarrollo CRM</title>
+    <link rel="stylesheet" href="styles.css?v=20260513-premium-auth-1" />
+  </head>
+  <body>
+    <section class="login-screen" id="loginScreen" aria-label="Ingreso al CRM">
+      <div class="login-visual">
+        <div class="brand-mark brand-mark-premium login-mark" aria-hidden="true">
+          <span class="brand-slash"></span>
+          <strong>RE</strong>
+          <strong>MAX</strong>
+        </div>
+        <p class="eyebrow">RE/MAX Paraguay</p>
+        <h1>Desarrollo CRM</h1>
+        <p>Workspace privado para leads, desarrollos, agenda comercial y cierre de operaciones premium.</p>
+        <div class="login-metrics" aria-hidden="true">
+          <span>Luxury advisory desk</span>
+          <strong>Pipeline ejecutivo</strong>
+        </div>
+      </div>
+      <form class="login-card" id="loginForm">
+        <div>
+          <p class="eyebrow">Acceso seguro</p>
+          <h2>Entrar al CRM</h2>
+          <span>Usa el usuario demo: admin@remax.py / admin123</span>
+        </div>
+        <label>Email<input name="email" type="email" autocomplete="username" required placeholder="admin@remax.py" value="admin@remax.py" /></label>
+        <label>Contrasena<input name="password" type="password" autocomplete="current-password" required placeholder="admin123" value="admin123" /></label>
+        <button class="primary-button login-button" type="submit">Ingresar</button>
+        <p class="login-error" id="loginError" role="alert"></p>
+      </form>
+    </section>
+
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Navegacion principal">
+        <div class="brand">
+          <div class="brand-mark brand-mark-premium" aria-hidden="true">
+            <span class="brand-slash"></span>
+            <strong>RE</strong>
+            <strong>MAX</strong>
+          </div>
+          <div>
+            <p class="eyebrow">RE/MAX Paraguay</p>
+            <h1>Desarrollo CRM</h1>
+            <span class="brand-subtitle">Luxury advisory desk</span>
+          </div>
+        </div>
+
+        <nav class="nav-list">
+          <button class="nav-item active" data-view="dashboard" data-title="Dashboard comercial" type="button">
+            <span class="icon" aria-hidden="true">D</span>
+            Dashboard
+          </button>
+          <button class="nav-item" data-view="leads" data-title="Leads" type="button">
+            <span class="icon" aria-hidden="true">L</span>
+            Leads
+          </button>
+          <button class="nav-item" data-view="pipeline" data-title="Pipeline" type="button">
+            <span class="icon" aria-hidden="true">P</span>
+            Pipeline
+          </button>
+          <button class="nav-item" data-view="projects" data-title="Desarrollos" type="button">
+            <span class="icon" aria-hidden="true">R</span>
+            Desarrollos
+          </button>
+          <button class="nav-item" data-view="followups" data-title="Seguimientos" type="button">
+            <span class="icon" aria-hidden="true">S</span>
+            Seguimientos
+          </button>
+          <button class="nav-item" data-view="users" data-title="Usuarios" type="button">
+            <span class="icon" aria-hidden="true">U</span>
+            Usuarios
+          </button>
+          <button class="nav-item" data-view="manual" data-title="Manual" type="button">
+            <span class="icon" aria-hidden="true">?</span>
+            Manual
+          </button>
+        </nav>
+
+        <div class="advisor-panel">
+          <p class="eyebrow">Foco comercial</p>
+          <strong>Venta de departamentos premium</strong>
+          <span>Eje corporativo, clientes extranjeros y desarrolladores activos.</span>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Workspace ejecutivo</p>
+            <h2 id="viewTitle">Dashboard comercial</h2>
+          </div>
+          <div class="topbar-actions">
+            <label class="search">
+              <span aria-hidden="true">⌕</span>
+              <input id="searchInput" type="search" placeholder="Buscar cliente, zona, proyecto" />
+            </label>
+            <button class="ghost-button" id="exportBtn" type="button">Exportar</button>
+            <button class="primary-button" id="newLeadBtn" type="button">Nuevo lead</button>
+            <button class="user-chip" id="currentUserBtn" type="button" title="Usuario activo"></button>
+            <button class="icon-button topbar-logout" id="logoutBtn" type="button" aria-label="Cerrar sesion">x</button>
+          </div>
+        </header>
+
+        <section class="filters" aria-label="Filtros del CRM">
+          <label>
+            Canal
+            <select id="sourceFilter">
+              <option value="all">Todos</option>
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Facebook">Facebook</option>
+              <option value="Instagram">Instagram</option>
+              <option value="X">X</option>
+              <option value="Recomendaciones">Recomendaciones</option>
+              <option value="Otros">Otros</option>
+            </select>
+          </label>
+          <label>
+            Etapa
+            <select id="stageFilter">
+              <option value="all">Todas</option>
+              <option value="Nuevo">Nuevo</option>
+              <option value="Calificado">Calificado</option>
+              <option value="Visita">Visita</option>
+              <option value="Reserva">Reserva</option>
+              <option value="Cierre">Cierre</option>
+            </select>
+          </label>
+          <label>
+            Zona
+            <select id="zoneFilter">
+              <option value="all">Todas</option>
+              <option value="Villa Morra">Villa Morra</option>
+              <option value="Carmelitas">Carmelitas</option>
+              <option value="Ycua Sati">Ycua Sati</option>
+              <option value="Las Lomas">Las Lomas</option>
+              <option value="Mburucuya">Mburucuya</option>
+              <option value="Sajonia">Sajonia</option>
+            </select>
+          </label>
+          <label>
+            Prioridad
+            <select id="priorityFilter">
+              <option value="all">Todas</option>
+              <option value="Alta">Alta</option>
+              <option value="Media">Media</option>
+              <option value="Baja">Baja</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="view active" id="dashboardView">
+          <section class="hero-band" aria-label="Resumen ejecutivo">
+            <div class="hero-copy">
+              <p class="eyebrow">Clientes dispersos, ahora en una sola mesa de control</p>
+              <h2>Seguimiento comercial por requerimiento, zona, presupuesto y tiempo de compra.</h2>
+              <div class="hero-stats">
+                <div>
+                  <strong id="hotLeadsCount">0</strong>
+                  <span>leads calientes</span>
+                </div>
+                <div>
+                  <strong id="monthValue">$0</strong>
+                  <span>valor estimado</span>
+                </div>
+                <div>
+                  <strong id="commissionValue">$0</strong>
+                  <span>comision potencial 5%</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="metric-grid" id="metricGrid"></div>
+
+          <div class="dashboard-layout">
+            <section class="panel wide-panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Pipeline</p>
+                  <h3>Estado de oportunidades</h3>
+                </div>
+                <button class="small-button" id="sortPriorityBtn" type="button">Ordenar por prioridad</button>
+              </div>
+              <div class="pipeline-bars" id="pipelineBars"></div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <p class="eyebrow">Segmentacion</p>
+                  <h3>De donde caen los clientes</h3>
+                </div>
+              </div>
+              <div class="source-chart" id="sourceChart"></div>
+            </section>
+          </div>
+
+          <section class="valuation-panel" aria-label="Tasacion rapida">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Valuacion ejecutiva</p>
+                <h3>Tasacion en USD y guaranies</h3>
+              </div>
+              <span class="valuation-rate">Referencia comercial editable</span>
+            </div>
+            <div class="valuation-grid">
+              <div class="valuation-result">
+                <span>Valor equivalente</span>
+                <strong id="valuationPyg">Gs. 0</strong>
+                <small id="valuationM2">$0 / m2</small>
+              </div>
+              <div class="valuation-inputs">
+                <label>Valor USD<input id="valuationUsd" type="number" min="0" step="1000" value="180000" /></label>
+                <label>Tipo de cambio<input id="valuationRate" type="number" min="1" step="50" value="7350" /></label>
+                <label>Superficie m2<input id="valuationArea" type="number" min="1" step="1" value="72" /></label>
+              </div>
+              <div class="valuation-note">
+                <strong id="valuationUsdLabel">$180,000</strong>
+                <span>Base para conversacion con propietario, inversor o desarrollador. No reemplaza tasacion formal.</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Bandeja comercial</p>
+                <h3>Leads que requieren accion</h3>
+              </div>
+              <button class="small-button" id="todayBtn" type="button">Ver seguimientos de hoy</button>
+            </div>
+            <div class="lead-table" id="leadTable"></div>
+            <div class="pagination-bar" id="leadTablePagination"></div>
+          </section>
+        </section>
+
+        <section class="view" id="leadsView">
+          <div class="module-intro">
+            <div>
+              <p class="eyebrow">Base comercial</p>
+              <h3>Todos los contactos en una sola lista</h3>
+            </div>
+            <span>Filtra por canal, etapa, zona o prioridad para encontrar exactamente a quien dar seguimiento.</span>
+          </div>
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">CRM maestro</p>
+                <h3>Clientes agrupados por requerimiento</h3>
+              </div>
+            </div>
+            <div class="lead-table full" id="leadDirectory"></div>
+            <div class="pagination-bar" id="leadDirectoryPagination"></div>
+          </section>
+        </section>
+
+        <section class="view" id="pipelineView">
+          <div class="module-intro">
+            <div>
+              <p class="eyebrow">Kanban comercial</p>
+              <h3>Arrastra tarjetas como tablero comercial</h3>
+            </div>
+            <span>Toma una tarjeta y soltala en otra columna. Tambien podes usar los controles rapidos de etapa.</span>
+          </div>
+          <div class="kanban" id="kanbanBoard"></div>
+        </section>
+
+        <section class="view" id="projectsView">
+          <div class="module-intro">
+            <div>
+              <p class="eyebrow">Desarrolladores</p>
+              <h3>Inventario comercial por proyecto</h3>
+            </div>
+            <div class="module-actions">
+              <span>Filtra por zona o busqueda, abre cada desarrollo para ver demanda vinculada y carga nuevos proyectos.</span>
+              <button class="primary-button" id="newProjectBtn" type="button">Nuevo desarrollo</button>
+            </div>
+          </div>
+          <div class="project-grid" id="projectGrid"></div>
+        </section>
+
+        <section class="view" id="followupsView">
+          <div class="module-intro">
+            <div>
+              <p class="eyebrow">Agenda</p>
+              <h3>Seguimiento visible y trazable</h3>
+            </div>
+            <span>Los contactos registrados desde la ficha aparecen en el historial del cliente y quedan guardados localmente.</span>
+          </div>
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Agenda inteligente</p>
+                <h3>Proximas acciones recomendadas</h3>
+              </div>
+            </div>
+            <div class="timeline" id="followupTimeline"></div>
+          </section>
+        </section>
+
+        <section class="view" id="manualView">
+          <section class="panel manual-panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Manual de usabilidad</p>
+                <h3>Como usar el CRM en una reunion o en la operacion diaria</h3>
+              </div>
+            </div>
+            <div class="manual-grid">
+              <article>
+                <strong>1. Cargar leads</strong>
+                <span>Usa Nuevo lead para registrar canal, busqueda, zona, presupuesto, pais, nacionalidad y tiempo de compra.</span>
+              </article>
+              <article>
+                <strong>2. Segmentar</strong>
+                <span>Usa Canal para separar WhatsApp, Facebook, Instagram, X, Recomendaciones y Otros. El Dashboard muestra el peso de cada origen.</span>
+              </article>
+              <article>
+                <strong>3. Gestionar pipeline</strong>
+                <span>En Pipeline podes arrastrar tarjetas entre columnas o usar las flechas de avance y retroceso.</span>
+              </article>
+              <article>
+                <strong>4. Registrar contacto</strong>
+                <span>Desde la ficha del cliente agrega una llamada, WhatsApp, reunion o email. Luego se ve en Historial comercial.</span>
+              </article>
+              <article>
+                <strong>5. Clientes extranjeros</strong>
+                <span>El pais es un campo formal. Si no es Paraguay, el CRM lo marca como extranjero y lo contabiliza en metricas.</span>
+              </article>
+              <article>
+                <strong>6. Exportar</strong>
+                <span>Exportar genera un CSV con los leads filtrados. Para servidor, la evolucion recomendada es Node.js + PostgreSQL + Prisma en Railway.</span>
+              </article>
+            </div>
+          </section>
+        </section>
+
+        <section class="view" id="usersView">
+          <div class="module-intro">
+            <div>
+              <p class="eyebrow">Accesos</p>
+              <h3>Gestion de usuarios</h3>
+            </div>
+            <div class="module-actions">
+              <span>Administra asesores, roles y estado de acceso del equipo comercial.</span>
+              <button class="primary-button" id="newUserBtn" type="button">Nuevo usuario</button>
+            </div>
+          </div>
+          <section class="panel">
+            <div class="panel-header">
+              <div>
+                <p class="eyebrow">Equipo comercial</p>
+                <h3>Usuarios activos del workspace</h3>
+              </div>
+            </div>
+            <div class="user-grid" id="userGrid"></div>
+          </section>
+        </section>
+      </main>
+
+      <aside class="detail-panel" aria-label="Detalle del cliente">
+          <button class="close-detail" id="closeDetailBtn" type="button" aria-label="Cerrar detalle">x</button>
+          <div id="clientDetail"></div>
+        </aside>
+    </div>
+
+    <dialog id="leadDialog">
+      <form method="dialog" class="lead-form" id="leadForm">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow">Alta rapida</p>
+            <h3>Nuevo cliente</h3>
+          </div>
+          <button class="icon-button" id="closeLeadDialogBtn" formnovalidate type="button" aria-label="Cerrar">x</button>
+        </div>
+        <div class="form-grid">
+          <label>Nombre<input name="name" required placeholder="Ej. Lucia Fernandez" /></label>
+          <label>Canal
+            <select name="source">
+              <option>WhatsApp</option>
+              <option>Facebook</option>
+              <option>Instagram</option>
+              <option>X</option>
+              <option>Recomendaciones</option>
+              <option>Otros</option>
+            </select>
+          </label>
+          <label>Que busca<input name="need" required placeholder="Departamento 2 dormitorios" /></label>
+          <label>Zona<input name="zone" required placeholder="Villa Morra" /></label>
+          <label>Presupuesto USD<input name="budget" type="number" min="50000" step="5000" required placeholder="180000" /></label>
+          <label>Tiempo de compra
+            <select name="timeframe">
+              <option>0-30 dias</option>
+              <option>1-3 meses</option>
+              <option>3-6 meses</option>
+              <option>+6 meses</option>
+            </select>
+          </label>
+          <label>Primer seguimiento<input name="followup" type="datetime-local" required /></label>
+          <label>Pais / residencia<input name="country" required placeholder="Ej. Paraguay, Argentina, Espana" /></label>
+          <label>Tipo de cliente
+            <select name="clientType">
+              <option>Local</option>
+              <option>Extranjero</option>
+              <option>Corporativo</option>
+              <option>Inversionista</option>
+            </select>
+          </label>
+          <label>Proyecto sugerido<input name="project" placeholder="Nostrum Carmelitas" /></label>
+          <label>Prioridad
+            <select name="priority">
+              <option>Alta</option>
+              <option>Media</option>
+              <option>Baja</option>
+            </select>
+          </label>
+        </div>
+        <label class="notes-label">Notas<textarea name="notes" placeholder="Motivo, objeciones, forma de pago, dudas legales o financieras"></textarea></label>
+        <div class="dialog-actions">
+          <button class="ghost-button" id="cancelLeadBtn" formnovalidate type="button">Cancelar</button>
+          <button class="primary-button" id="saveLeadBtn" value="default" type="submit">Guardar lead</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="contactDialog">
+      <form method="dialog" class="lead-form" id="contactForm">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow">Historial comercial</p>
+            <h3>Registrar contacto</h3>
+          </div>
+          <button class="icon-button" id="closeContactDialogBtn" formnovalidate type="button" aria-label="Cerrar">x</button>
+        </div>
+        <input type="hidden" name="leadId" />
+        <div class="form-grid">
+          <label>Tipo de contacto
+            <select name="type">
+              <option>WhatsApp</option>
+              <option>Llamada</option>
+              <option>Reunion</option>
+              <option>Email</option>
+              <option>Visita</option>
+            </select>
+          </label>
+          <label>Proximo seguimiento<input name="nextFollowup" type="datetime-local" required /></label>
+        </div>
+        <label class="notes-label">Resumen<textarea name="summary" required placeholder="Que se hablo, objeciones, interes real, siguiente paso"></textarea></label>
+        <div class="dialog-actions">
+          <button class="ghost-button" id="cancelContactBtn" formnovalidate type="button">Cancelar</button>
+          <button class="primary-button" value="default" type="submit">Guardar contacto</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="projectDialog">
+      <form method="dialog" class="lead-form" id="projectForm">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow">Inventario</p>
+            <h3>Nuevo desarrollo</h3>
+          </div>
+          <button class="icon-button" id="closeProjectDialogBtn" formnovalidate type="button" aria-label="Cerrar">x</button>
+        </div>
+        <div class="form-grid">
+          <label>Nombre del desarrollo<input name="name" required placeholder="Ej. Torre Aviadores" /></label>
+          <label>Desarrollador<input name="developer" required placeholder="Ej. Grupo desarrollador" /></label>
+          <label>Zona<input name="zone" required placeholder="Villa Morra" /></label>
+          <label>Estado
+            <select name="status">
+              <option>Activo</option>
+              <option>Prereserva</option>
+              <option>Vendido</option>
+              <option>Pausado</option>
+            </select>
+          </label>
+          <label>Precio desde USD<input name="priceFrom" type="number" min="0" step="1000" required placeholder="120000" /></label>
+          <label>Precio hasta USD<input name="priceTo" type="number" min="0" step="1000" required placeholder="350000" /></label>
+          <label>Unidades disponibles<input name="inventory" type="number" min="0" step="1" required placeholder="18" /></label>
+          <label>Comision %<input name="commission" type="number" min="0" max="10" step="0.5" required value="5" /></label>
+          <label>Entrega estimada<input name="delivery" type="month" /></label>
+        </div>
+        <label class="notes-label">Notas<textarea name="notes" placeholder="Perfil del comprador, amenities, condiciones, diferenciales"></textarea></label>
+        <div class="dialog-actions">
+          <button class="ghost-button" id="cancelProjectBtn" formnovalidate type="button">Cancelar</button>
+          <button class="primary-button" value="default" type="submit">Guardar desarrollo</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="userDialog">
+      <form method="dialog" class="lead-form" id="userForm">
+        <div class="dialog-header">
+          <div>
+            <p class="eyebrow">Workspace</p>
+            <h3>Nuevo usuario</h3>
+          </div>
+          <button class="icon-button" id="closeUserDialogBtn" formnovalidate type="button" aria-label="Cerrar">x</button>
+        </div>
+        <div class="form-grid">
+          <label>Nombre<input name="name" required placeholder="Ej. Lucia Fernandez" /></label>
+          <label>Email<input name="email" type="email" required placeholder="lucia@remax.py" /></label>
+          <label>Rol
+            <select name="role">
+              <option>Admin</option>
+              <option>Agente</option>
+              <option>Asistente</option>
+              <option>Gerencia</option>
+            </select>
+          </label>
+          <label>Estado
+            <select name="status">
+              <option>Activo</option>
+              <option>Pausado</option>
+            </select>
+          </label>
+          <label>Contrasena<input name="password" type="password" required placeholder="Minimo 6 caracteres" minlength="6" /></label>
+        </div>
+        <div class="dialog-actions">
+          <button class="ghost-button" id="cancelUserBtn" formnovalidate type="button">Cancelar</button>
+          <button class="primary-button" value="default" type="submit">Guardar usuario</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js?v=20260513-premium-auth-1"></script>
+  </body>
+</html>
