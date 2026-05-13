@@ -311,6 +311,7 @@ function currentUser() {
 }
 
 function setActiveView(viewName) {
+  qs("#appShell").dataset.activeView = viewName;
   qsa(".nav-item").forEach((item) => item.classList.toggle("active", item.dataset.view === viewName));
   qsa(".view").forEach((view) => view.classList.remove("active"));
   qs(`#${viewName}View`).classList.add("active");

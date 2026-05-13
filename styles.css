@@ -566,7 +566,9 @@ body.auth-locked {
   backdrop-filter: blur(10px);
 }
 
-.filters.hidden {
+.filters.hidden,
+.app-shell[data-active-view="users"] .filters,
+.app-shell[data-active-view="manual"] .filters {
   display: none;
 }
 
